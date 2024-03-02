@@ -12,8 +12,23 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
+  const [popularAnecdote, setPopularAnecdote] = useState();
 
-  const handleClick = () => {
+  const choosePopularAnecdote = () => {
+    const maxVote = Math.max(...points);
+    const indexOfPopular = points.findIndex((item) => item === maxVote);
+    setPopularAnecdote(indexOfPopular);
+  };
+
+  const handleVote = () => {
+    const result = [...points];
+    result[selected]++;
+    setPoints(result);
+    choosePopularAnecdote();
+  };
+
+  const handleNextAnecdote = () => {
     let randomIndex;
 
     do {
@@ -22,11 +37,26 @@ const App = () => {
 
     setSelected(randomIndex);
   };
-  
+
   return (
     <>
-      <div>{anecdotes[selected]}</div>
-      <button onClick={handleClick}>Next Anecdote</button>
+      <div>
+        <h2>Anecdote of the day:</h2>
+        <div>
+          <p>{anecdotes[selected]}</p>
+          <p> Votes:{points[selected]}</p>
+          <div>
+            <button onClick={handleVote}>Vote</button>
+            <button onClick={handleNextAnecdote}>Next Anecdote</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2>Anecdote with most views</h2>
+        <p>{anecdotes[popularAnecdote]}</p>
+        <p>Has {points[popularAnecdote]} votes</p>
+      </div>
     </>
   );
 };
